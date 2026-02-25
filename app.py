@@ -37,9 +37,9 @@ with aba1:
         nome = st.text_input("Nome do Produto", placeholder="Ex: Fone Bluetooth")
         col1, col2 = st.columns(2)
         with col1:
-            custo = st.number_input("Custo (R$)", min_value=0.0, format="%.2f")
+            custo = st..number_input("Custo (R$)", min_value=0.0, format="%.2f", value=None, placeholder="0,00")
         with col2:
-            venda = st.number_input("Venda (R$)", min_value=0.0, format="%.2f")
+            venda = st.number_input("Venda (R$)", min_value=0.0, format="%.2f", value=None, placeholder="0,00")
             
     # Configurações de taxas (podemos automatizar depois)
     with st.expander("⚙️ Ajustar Taxas e Impostos"):
