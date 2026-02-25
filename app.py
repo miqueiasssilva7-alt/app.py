@@ -7,12 +7,24 @@ st.set_page_config(page_title="SmartCommerce AI", page_icon="🛒", layout="cent
 # Estilo CSS para deixar com cara de App de Celular
 st.markdown("""
     <style>
-    .main { background-color: #f5f7f9; }
-    .stButton>button { width: 100%; border-radius: 10px; height: 3em; background-color: #007bff; color: white; }
+    .main { background-color: #f8f9fa; }
+    .stButton>button { 
+        width: 100%; 
+        border-radius: 8px; 
+        height: 3.5em; 
+        background-color: #1E3A8A; 
+        color: white;
+        font-weight: bold;
+    }
+    .welcome-text {
+        font-size: 1.1em;
+        color: #4B5563;
+        margin-bottom: 20px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛒 SmartCommerce OMN STRATAGEM")
+st.title("🛡️ Omni Stratagem")
 st.caption("A inteligência por trás do seu lucro")
 
 # Menu de navegação superior
