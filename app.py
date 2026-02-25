@@ -12,7 +12,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛒 SmartCommerce AI")
+st.title("🛒 SmartCommerce OMN STRATAGEM")
 st.caption("A inteligência por trás do seu lucro")
 
 # Menu de navegação superior
@@ -47,7 +47,7 @@ with aba1:
         
         st.divider()
         if lucro > 0:
-            st.balloons()
+            st.coins()
             st.success(f"**LUCRO LÍQUIDO:** R$ {lucro:.2f}")
             st.info(f"**MARGEM REAL:** {margem:.2f}%")
         else:
