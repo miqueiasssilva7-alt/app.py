@@ -47,7 +47,7 @@ with aba1:
         
         st.divider()
         if lucro > 0:
-            st.coins ()
+            st.st.toast('🚀 Estratégia vencedora!', icon='✅') ()
             st.success(f"**LUCRO LÍQUIDO:** R$ {lucro:.2f}")
             st.info(f"**MARGEM REAL:** {margem:.2f}%")
         else:
