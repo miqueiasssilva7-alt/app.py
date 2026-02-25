@@ -42,11 +42,14 @@ with aba1:
             venda = st.number_input("Venda (R$)", min_value=0.0, format="%.2f", value=None, placeholder="0,00")
             
     # Configurações de taxas (podemos automatizar depois)
-    with st.expander("⚙️ Ajustar Taxas e Impostos"):
-        imposto = st.slider("Imposto (%)", 0, 30, 6)
-        comissao = st.slider("Comissão Mktplace (%)", 0, 30, 12)
-        frete_fixo = st.checkbox("Incluir Taxa Fixa (R$ 6,50)", value=(venda < 79 and venda > 0))
-
+    with st.expander("🛠️ Parâmetros Estratégicos"):
+        taxa_imposto = st.slider("Alíquota de Imposto (%)", 0, 30, 6)
+        taxa_mkt = st.slider("Taxa do Marketplace (%)", 0, 30, 12)
+        
+        # Proteção contra erro: se preco_venda for None, usamos 0.0
+        venda_segura = preco_venda if preco_venda is not None else 0.0
+        
+        tem_taxa_fixa = st.checkbox("Aplicar Taxa Fixa (R$ 6,50)", value=(venda_segura < 79 and venda_segura > 0))
     if st.button("CALCULAR DIAGNÓSTICO"):
         # Lógica de cálculo
         v_imposto = venda * (imposto/100)
