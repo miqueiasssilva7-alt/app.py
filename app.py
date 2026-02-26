@@ -11,7 +11,6 @@ st.caption("Gestão de Lucro e Meta de Ads")
 st.write("---")
 
 # 2. Entrada de Dados
-# O uso de value=None faz com que o campo fique vazio até você digitar
 st.header("📥 Dados do Produto")
 nome_prod = st.text_input("Nome do Produto", placeholder="Ex: Fone Bluetooth")
 
@@ -23,31 +22,51 @@ with col2:
     preco_venda = st.number_input("Preço de Venda (R$)", min_value=0.0, step=0.01, value=None, placeholder="0,00")
     comissao = st.number_input("Comissão (%)", min_value=0.0, step=0.1, value=None, placeholder="12.0")
 
-# 3. Lógica de Cálculo (Só executa se os campos forem preenchidos)
+# --- NOVA SEÇÃO DE TAXA FIXA SELECIONÁVEL ---
+st.write("---")
+st.subheader("📌 Regra de Taxa Fixa")
+
+# Criamos as opções de taxas para o usuário escolher
+opcoes_taxas = {
+    "Nenhuma (Venda > R$ 79 ou Isento)": 0.0,
+    "ML: Taxa Fixa R$ 6,25": 6.25,
+    "ML: Taxa Fixa R$ 6,50": 6.50,
+    "ML: Taxa Fixa R$ 6,75": 6.75,
+    "Shopee: Taxa Fixa R$ 4,00": 4.00,
+    "Shopee: Taxa Fixa R$ 18,00": 18.00,
+    "Shopee: Taxa Fixa R$ 26,00": 26.00
+}
+
+escolha_taxa = st.selectbox(
+    "Selecione a Taxa Fixa aplicada a este produto:",
+    options=list(opcoes_taxas.keys())
+)
+taxa_fixa_selecionada = opcoes_taxas[escolha_taxa]
+
+# 3. Lógica de Cálculo
 if custo_un and preco_venda:
-    taxa_fixa = 6.50 if preco_venda < 79 else 0.0
     v_imposto = preco_venda * (imposto / 100) if imposto else 0
     v_comissao = preco_venda * (comissao / 100) if comissao else 0
     
-    lucro = preco_venda - custo_un - v_imposto - v_comissao - taxa_fixa
-    margem = (lucro / preco_venda) * 100
+    # Cálculo final usando a taxa escolhida pelo usuário
+    lucro = preco_venda - custo_un - v_imposto - v_comissao - taxa_fixa_selecionada
+    margem = (lucro / preco_venda) * 100 if preco_venda > 0 else 0
     
     st.write("---")
     
     # 4. Resultados e Efeito de Estratégia Vencedora
     st.subheader("📊 Resultado Final")
     
-    # EFEITO DE ESTRATÉGIA VENCEDORA
     if margem >= 20:
-        st.balloons() # Efeito de balões para margens excelentes
+        st.balloons()
         st.success("🏆 **ESTRATÉGIA VENCEDORA DETECTADA!**")
-        st.markdown("Este produto possui uma margem de segurança alta e grande potencial de escala.")
+        st.markdown(f"Este produto no **{escolha_taxa.split(':')[0]}** possui excelente potencial.")
     
-    st.metric("LUCRO LÍQUIDO", f"R$ {lucro:.2f}")
-    st.metric("MARGEM REAL", f"{margem:.2f}%")
+    col_res1, col_res2 = st.columns(2)
+    col_res1.metric("LUCRO LÍQUIDO", f"R$ {lucro:.2f}")
+    col_res2.metric("MARGEM REAL", f"{margem:.2f}%")
 
-    if preco_venda < 79:
-        st.warning(f"⚠️ Taxa fixa de R$ 6,50 aplicada (Venda < R$ 79).")
+    st.info(f"Taxa Fixa aplicada: R$ {taxa_fixa_selecionada:.2f}")
 
     st.write("---")
 
@@ -60,13 +79,13 @@ if custo_un and preco_venda:
         roas_atual = st.slider("Quanto está o ROAS no painel?", 0.0, 20.0, float(round(roas_eb + 1, 1)))
         
         if roas_atual < roas_eb:
-            st.error(f"🔴 PREJUÍZO! O ROAS está abaixo do ponto de equilíbrio.")
+            st.error(f"🔴 PREJUÍZO! ROAS abaixo de {roas_eb:.2f}")
         elif roas_atual < (roas_eb * 1.5):
-            st.warning("🟡 ALERTA: Operação saudável, mas com pouco lucro real.")
+            st.warning("🟡 ALERTA: Operação saudável, lucro estreito.")
         else:
-            st.success("🟢 EXCELENTE: Campanha gerando lucro líquido real!")
+            st.success("🟢 EXCELENTE: Lucro líquido real garantido!")
     else:
-        st.error("❌ Margem negativa. Ajuste os custos ou preço antes de anunciar.")
+        st.error("❌ Margem negativa. Ajuste os custos antes de anunciar.")
 
 else:
-    st.info("💡 Preencha o Custo e o Preço de Venda para ver a análise.")
+    st.info("💡 Preencha os dados acima para calcular.")
