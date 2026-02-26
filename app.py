@@ -15,7 +15,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("🛡️ Omni Stratagem")
-st.markdown('**Soluções inteligentes para o seu negócio.**')
+st.markdown('**Soluções inteligentes para o seu Ecommerce.**')
 
 # --- ENTRADA DE DADOS ---
 nome_prod = st.text_input("Produto", placeholder="Ex: Fone Bluetooth")
@@ -36,8 +36,8 @@ with st.expander("🛠️ Parâmetros Estratégicos"):
         "Sem Taxa Fixa": 0.0,
         "R$ 4,00 (Destaque Shopee)": 4.0,
         "R$ 6,25 (Mercado Livre)": 6.25,
-        "R$ 6,50 (Mercado Livre Padrão)": 6.50,
-        "R$ 6,75 (Mercado Livre Premium)": 6.75
+        "R$ 6,50 (Mercado Livre)": 6.50,
+        "R$ 6,75 (Mercado Livre)": 6.75
     }
     selecao_taxa = st.selectbox("Canal de Venda (Taxa Fixa):", list(opcoes_taxa.keys()))
     valor_fixa = opcoes_taxa[selecao_taxa]
