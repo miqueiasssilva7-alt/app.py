@@ -23,10 +23,7 @@ with col2:
     preco_venda = st.number_input("Preço de Venda (R$)", min_value=0.0, step=0.01, value=None, placeholder="0,00")
     comissao = st.number_input("Comissão (%)", min_value=0.0, step=0.1, value=None, placeholder="12.0")
 
-# --- SEÇÃO DE FRETE (TABELAS COMPLETAS) ---
-st.write("---")
-st.subheader("🚚 Configuração de Frete")
-
+# --- LÓGICA DE AUTOMATIZAÇÃO DA FAIXA DE PREÇO ---
 faixas_venda = [
     "R$ 0 a R$ 18,99", 
     "R$ 19 a R$ 48,99", 
@@ -37,6 +34,21 @@ faixas_venda = [
     "R$ 150 a R$ 199,99", 
     "A partir de R$ 200"
 ]
+
+idx_automatico = 0
+if preco_venda is not None:
+    if preco_venda <= 18.99: idx_automatico = 0
+    elif preco_venda <= 48.99: idx_automatico = 1
+    elif preco_venda <= 78.99: idx_automatico = 2
+    elif preco_venda <= 99.99: idx_automatico = 3
+    elif preco_venda <= 119.99: idx_automatico = 4
+    elif preco_venda <= 149.99: idx_automatico = 5
+    elif preco_venda <= 199.99: idx_automatico = 6
+    else: idx_automatico = 7
+
+# --- SEÇÃO DE FRETE ---
+st.write("---")
+st.subheader("🚚 Configuração de Frete")
 
 tabela_frete = {
     "Até 0,3 kg": [5.65, 6.55, 7.75, 12.35, 14.35, 16.45, 18.45, 20.95],
@@ -55,7 +67,8 @@ tabela_frete = {
 
 col_f1, col_f2 = st.columns(2)
 with col_f1:
-    sel_faixa_venda = st.selectbox("Faixa de Preço de Venda:", faixas_venda)
+    # O index=idx_automatico faz a mágica de selecionar sozinho baseado no preço
+    sel_faixa_venda = st.selectbox("Faixa de Preço (Auto):", faixas_venda, index=idx_automatico)
 with col_f2:
     sel_peso = st.selectbox("Peso do Produto:", list(tabela_frete.keys()))
 
@@ -76,14 +89,13 @@ if custo_un and preco_venda:
     st.subheader("📊 Análise de Composição")
     
     if margem >= 20:
-        # Trocado balões por efeito de sucesso e foguete
         st.success("🚀 **ESTRATÉGIA VENCEDORA! DECOLOUE!**")
         st.toast("Rumo ao topo!", icon="🚀")
 
     col_res1, col_res2, col_res3 = st.columns(3)
     col_res1.metric("LUCRO LÍQUIDO", f"R$ {lucro:.2f}")
     col_res2.metric("MARGEM REAL", f"{margem:.2f}%")
-    col_res3.metric("FRETE CALCULADO", f"R$ {frete_val:.2f}")
+    col_res3.metric("FRETE APLICADO", f"R$ {frete_val:.2f}")
 
     # --- GRÁFICO ---
     dados_grafico = {
@@ -103,10 +115,8 @@ if custo_un and preco_venda:
         roas_atual = st.slider("Qual o ROAS atual da campanha?", 0.1, 20.0, float(round(roas_eb + 1, 1)))
         
         if roas_atual < roas_eb:
-            st.error(f"Ponto de corte ROAS: {roas_eb:.2f}. Cuidado com o prejuízo.")
+            st.error(f"🔴 Prejuízo detectado no Ads.")
         else:
-            st.success(f"🟢 Operação Lucrativa com ROAS {roas_atual}")
-    else:
-        st.error("Margem negativa impossibilita cálculo de ROAS lucrativo.")
+            st.success(f"🟢 Operação Lucrativa")
 else:
-    st.info("💡 Insira os valores para ver a mágica acontecer!")
+    st.info("💡 Insira o Preço de Venda para que o frete seja calculado automaticamente.")
