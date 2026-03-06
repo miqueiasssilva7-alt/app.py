@@ -124,4 +124,16 @@ if preco_venda and custo_un:
 
     # --- ETAPA 4: ADS (ROAS) ---
     st.write("---")
-    st.subheader("
+    st.subheader("🎯 Meta de Ads")
+    roas_eb = 1 / (margem / 100) if margem > 0 else 0
+    
+    st.info(f"ROAS de Equilíbrio: **{roas_eb:.2f}x**")
+    roas_atual = st.slider("Seu ROAS atual:", 0.1, 15.0, float(round(roas_eb + 1, 1)))
+    
+    if roas_atual < roas_eb:
+        st.error("🔴 Prejuízo no Ads")
+    else:
+        sobra = (1 - (roas_eb / roas_atual)) * margem
+        st.success(f"🟢 Lucro Final: {sobra:.2f}%")
+else:
+    st.info("👋 Aguardando dados para calcular...")
